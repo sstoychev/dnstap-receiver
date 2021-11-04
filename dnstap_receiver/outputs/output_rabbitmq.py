@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import time
-import traceback
 
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Channel
@@ -109,12 +108,12 @@ class RabbitMQ:
 
 
 
-async def handle(output_cfg: dict, queue: asyncio.Queue, _metrics: statistics.Statistics, start_shutdown: asyncio.Event):
+async def handle(output_cfg: dict, queue: asyncio.Queue, _: statistics.Statistics, start_shutdown: asyncio.Event):
     """Connect to rabbit and push the messages from the queue"""
 
     rabbitmq = RabbitMQ(output_cfg=output_cfg)
     clogger.info("Output handler: rabbitmq: Enabled")
-    while not start_shutdown.is_set():
+    while not output_cfg['stats-only'] and  not start_shutdown.is_set():
         try:
             tapmsg = await asyncio.wait_for(queue.get(), timeout=0.5)
         except asyncio.TimeoutError:
