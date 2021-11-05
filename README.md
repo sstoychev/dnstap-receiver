@@ -12,6 +12,8 @@ in JSON, YAML or one line text format and more.
 
 If you want better performance, please to use the [dnscollector](https://github.com/dmachard/go-dnscollector) tool written in Go.
 
+If you want to use the **dnstap** feature of your dns server, please to read the following page [Dnstap: How to enable it on main dns servers](https://dmachard.github.io/posts/0001-dnstap-testing/)
+
 ## Table of contents
 * [Installation](#installation)
     * [PyPI](#pypi)
@@ -454,6 +456,49 @@ Configuration
     # Kafka topic to forward messages to
     topic: null
 ```
+
+### RabbitMQ
+
+This output enables to send dnstap messages to a RabbitMQ queue.
+
+Install extra python library for rabbitmq
+
+```python
+pip install dnstap_receiver[rabbitmq]
+```
+
+Configuration
+
+```yaml
+  # forward to a RabbitMQ queue
+  rabbitmq:
+    # enable or disable
+    enable: false
+    # format available text|json|yaml
+    format: json
+    # connection configuration
+    connection:
+      username: null
+      password: null
+      host: 127.0.0.1
+      port: 5672
+    # Queue to forward messages to
+    queue:
+      queue: null
+      passive: false
+      durable: true
+      exclusive: false
+      auto_delete: false
+    # Exchange, default ''
+    exchange: ""
+    # Routing key, default = queue
+    routing-key: null
+    # Retries to connect/publish
+    retry-count: 2
+    # Retry delay seconds
+    retry-delay: 0.5
+```
+
 
 ### PostgreSQL
 
